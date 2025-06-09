@@ -45,18 +45,24 @@ class ReplyHomeViewModel(
                     _uiState.value = ReplyHomeUIState(error = ex.message)
                 }
                 .collect { emails ->
-                    _uiState.value = ReplyHomeUIState(emails = emails)
+                    val currentSelection = _uiState.value.selectedEmail
+                    _uiState.value = ReplyHomeUIState(
+                        emails = emails,
+                        selectedEmail = currentSelection ?: emails.first()
+                    )
                 }
         }
     }
 
     fun setSelectedEmail(email: Email) {
-        // You will implement email selection here.
+        _uiState.update {
+            it.copy(selectedEmail = email)
+        }
     }
-}
 
 data class ReplyHomeUIState(
     val emails : List<Email> = emptyList(),
+    val selectedEmail: Email? = null,
     val loading: Boolean = false,
     val error: String? = null
 )
